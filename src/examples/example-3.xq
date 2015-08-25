@@ -1,4 +1,4 @@
-import module namespace schematron = "http://github.com/vincentml/schematron-basex";
+import module namespace schematron = "http://github.com/vincentml/schematron-exist" at "../main/content/schematron.xqm";
 
 let $sch := schematron:compile(doc('example-1.sch'))
 let $svrl := schematron:validate(doc('example-1b.xml'), $sch)

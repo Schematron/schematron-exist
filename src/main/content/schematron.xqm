@@ -1,13 +1,13 @@
 (:~ 
- : Schematron module for BaseX
+ : Schematron module for eXist
  : 
  : @author Vincent M. Lizzi
  : @see LICENSE (The MIT License)
- : @see http://basex.org/
- : @see http://github.com/vincentml/schematron-basex
+ : @see http://exist-db.org/
+ : @see http://github.com/vincentml/schematron-exist
  :)
 
-module namespace _ = "http://github.com/vincentml/schematron-basex";
+module namespace _ = "http://github.com/vincentml/schematron-exist";
 
 declare namespace sch = "http://purl.oclc.org/dsdl/schematron";
 declare namespace svrl = "http://purl.oclc.org/dsdl/svrl";
@@ -25,35 +25,35 @@ declare variable $_:info := ('info', 'information');
 (:~ 
  : Compile a given Schematron file so that it can be used to validate documents. 
  :)
-declare function _:compile($schematron) as document-node(element(xsl:stylesheet)) {
-  _:compile($schematron, map{} )
+declare function _:compile($schematron) as node() {
+  _:compile($schematron, () )
 };
 
 (:~ 
  : Compile a given Schematron file using given parameters so that it can be used to validate documents. 
  :)
-declare function _:compile($schematron, $params as map(xs:string, xs:string)) as document-node(element(xsl:stylesheet)) {
-  let $step1 := xslt:transform($schematron, $_:include, $params)
-  let $step2 := xslt:transform($step1, $_:expand, $params)
-  let $step3 := if (xslt:version() eq "1.0") 
+declare function _:compile($schematron, $params) as node() {
+  let $step1 := transform:transform($schematron, doc($_:include), $params)
+  let $step2 := transform:transform($step1, doc($_:expand), $params)
+  let $step3 := (: if (xslt:version() eq "1.0") 
     then xslt:transform($step2, $_:compile1, $params) 
-    else xslt:transform($step2, $_:compile2, $params)
+    else :) transform:transform($step2, doc($_:compile2), $params)
   return $step3
 };
 
 (:~ 
  : Validate a given document using a compiled Schematron. Returns SVRL validation result.
  :)
-declare function _:validate($document as node(), $compiledSchematron as node()) as document-node(element(svrl:schematron-output))? {
-  xslt:transform($document, $compiledSchematron)
+declare function _:validate($document as node(), $compiledSchematron as node()) as node() {
+  transform:transform($document, $compiledSchematron, ())
 };
 
 (:~ 
  : Check whether a SVRL validation result indicates valid in a pass/fail sense.
  :)
 declare function _:is-valid($svrl) as xs:boolean {
-  boolean($svrl[//svrl:fired-rule]) and
-  not(boolean(($svrl/svrl:schematron-output/svrl:failed-assert union $svrl/svrl:schematron-output/svrl:successful-report)[
+  boolean($svrl[descendant::svrl:fired-rule]) and
+  not(boolean(($svrl//svrl:failed-assert union $svrl//svrl:successful-report)[
     not(@role) or @role = $_:error
   ]))
 };
@@ -62,14 +62,14 @@ declare function _:is-valid($svrl) as xs:boolean {
  : Check whether a SVRL validation result contains any error, warning, or informational messages.
  :)
 declare function _:has-messages($svrl) as xs:boolean {
-  boolean(($svrl/svrl:schematron-output/svrl:failed-assert union $svrl/svrl:schematron-output/svrl:successful-report))
+  boolean(($svrl//svrl:failed-assert union $svrl//svrl:successful-report))
 };
 
 (:~ 
  : Return messages from a SVRL validation result.
  :)
 declare function _:messages($svrl) as item()* {
-  ($svrl/svrl:schematron-output/svrl:failed-assert union $svrl/svrl:schematron-output/svrl:successful-report)
+  ($svrl//svrl:failed-assert union $svrl//svrl:successful-report)
 };
 
 (:~ 

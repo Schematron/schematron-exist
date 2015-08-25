@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="xar" name="schematron-exist">
+    <xmlproperty file="expath-pkg.xml"/>
+    <property name="project.version" value="${package(version)}"/>
+    <property name="project.app" value="${package(abbrev)}"/>
+    <property name="build.dir" value="dist"/>
+    <target name="xar">
+        <mkdir dir="${build.dir}"/>
+        <zip basedir="src/main" destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*">
+            <zipfileset dir="." includes="repo.xml,expath-pkg.xml"/>
+        </zip>
+    </target>
+</project>

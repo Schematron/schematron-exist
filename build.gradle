@@ -1,9 +1,9 @@
 defaultTasks 'build'
 
 task build(type:Zip){
-	def pkg = new XmlParser().parse("src/main/expath-pkg.xml")
+	def pkg = new XmlParser().parse("expath-pkg.xml")
 	
-	from 'src/main'
+	from 'src/main', 'repo.xml' 'expath-pkg.xml'
 	baseName = pkg.attribute("abbrev")
 	extension = "xar"
 	version = pkg.attribute("version")

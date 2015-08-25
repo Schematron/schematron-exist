@@ -1,45 +1,68 @@
 module namespace _ = "0005";
 
-import module namespace s = "http://github.com/vincentml/schematron-basex" at "../../main/content/schematron.xqm";
+import module namespace s = "http://github.com/vincentml/schematron-exist" at "../../main/content/schematron.xqm";
 
-declare %unit:test function _:example1a() {
+declare namespace test="http://exist-db.org/xquery/xqsuite";
+
+declare %test:assertEquals(
+    'false',
+    'true',
+    4,
+    'info',
+    'info',
+    'warn',
+    'error',
+    '/document/title',
+    'short section has fewer than 3 paragraphs',
+    '/document/p[2]',
+    'p (paragraph) should not be empty'
+    ) function _:example1a() {
   let $sch := s:compile(doc('example-1.sch'))
   let $svrl := s:validate(doc('example-1a.xml'), $sch)
   return (
-    unit:assert(not(s:is-valid($svrl))),
-    unit:assert(s:has-messages($svrl)),
-    unit:assert-equals(count(s:messages($svrl)), 4),
-    unit:assert-equals(s:message-level(s:messages($svrl)[1]), 'info'),
-    unit:assert-equals(s:message-level(s:messages($svrl)[2]), 'info'),
-    unit:assert-equals(s:message-level(s:messages($svrl)[3]), 'warn'),
-    unit:assert-equals(s:message-level(s:messages($svrl)[4]), 'error'),
-    unit:assert-equals(data(s:messages($svrl)[3]/@location), '/document/title'),
-    unit:assert-equals(data(s:messages($svrl)[3]/*:text), 'short section has fewer than 3 paragraphs'),
-    unit:assert-equals(data(s:messages($svrl)[4]/@location), '/document/p[2]'),
-    unit:assert-equals(data(s:messages($svrl)[4]/*:text), 'p (paragraph) should not be empty')
+    s:is-valid($svrl),
+    s:has-messages($svrl),
+    count(s:messages($svrl)),
+    s:message-level(s:messages($svrl)[1]),
+    s:message-level(s:messages($svrl)[2]),
+    s:message-level(s:messages($svrl)[3]),
+    s:message-level(s:messages($svrl)[4]),
+    data(s:messages($svrl)[3]/@location),
+    normalize-space(data(s:messages($svrl)[3]/*:text)),
+    data(s:messages($svrl)[4]/@location),
+    normalize-space(data(s:messages($svrl)[4]/*:text))
   )
 };
 
-declare %unit:test function _:example1b() {
+declare %test:assertEquals(
+    'true',
+    'true',
+    3,
+    'info',
+    'info',
+    'warn',
+    '/document/title',
+    'short section has fewer than 3 paragraphs'
+    ) function _:example1b() {
   let $sch := s:compile(doc('example-1.sch'))
   let $svrl := s:validate(doc('example-1b.xml'), $sch)
   return (
-    unit:assert(s:is-valid($svrl)),
-    unit:assert(s:has-messages($svrl)),
-    unit:assert-equals(count(s:messages($svrl)), 3),
-    unit:assert-equals(s:message-level(s:messages($svrl)[1]), 'info'),
-    unit:assert-equals(s:message-level(s:messages($svrl)[2]), 'info'),
-    unit:assert-equals(s:message-level(s:messages($svrl)[3]), 'warn'),
-    unit:assert-equals(data(s:messages($svrl)[3]/@location), '/document/title'),
-    unit:assert-equals(data(s:messages($svrl)[3]/*:text), 'short section has fewer than 3 paragraphs')
+    s:is-valid($svrl),
+    s:has-messages($svrl),
+    count(s:messages($svrl)),
+    s:message-level(s:messages($svrl)[1]),
+    s:message-level(s:messages($svrl)[2]),
+    s:message-level(s:messages($svrl)[3]),
+    data(s:messages($svrl)[3]/@location),
+    normalize-space(data(s:messages($svrl)[3]/*:text))
   )
 };
 
-declare %unit:test function _:example1c() {
+declare %test:assertEquals('true', 'false') function _:example1c() {
   let $sch := s:compile(doc('example-1.sch'))
   let $svrl := s:validate(doc('example-1c.xml'), $sch)
   return (
-    unit:assert(s:is-valid($svrl)), 
-    unit:assert(not(s:has-messages($svrl)))
+    s:is-valid($svrl), 
+    s:has-messages($svrl)
   )
 };

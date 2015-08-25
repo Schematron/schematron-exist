@@ -1,23 +1,25 @@
 module namespace _ = "0002";
 
-import module namespace s = "http://github.com/vincentml/schematron-basex" at "../../main/content/schematron.xqm";
+import module namespace s = "http://github.com/vincentml/schematron-exist" at "../../main/content/schematron.xqm";
 
-declare %unit:test function _:valid() {
+declare namespace test="http://exist-db.org/xquery/xqsuite";
+
+declare %test:assertTrue function _:valid() {
   let $r := s:validate(doc('0002-valid.xml'), s:compile(doc('0002.sch')))
-  return unit:assert(s:is-valid($r), $r)
+  return s:is-valid($r)
 };
 
-declare %unit:test function _:invalid() {
+declare %test:assertFalse function _:invalid() {
   let $r := s:validate(doc('0002-invalid.xml'), s:compile(doc('0002.sch')))
-  return unit:assert(not(s:is-valid($r)), $r)
+  return s:is-valid($r)
 };
 
-declare %unit:test function _:valid-messages() {
+declare %test:assertEmpty function _:valid-messages() {
   let $r := s:messages(s:validate(doc('0002-valid.xml'), s:compile(doc('0002.sch'))))
-  return unit:assert(empty($r))
+  return $r
 };
 
-declare %unit:test function _:invalid-messages() {
+declare %test:assertEquals(1) function _:invalid-messages() {
   let $r := s:messages(s:validate(doc('0002-invalid.xml'), s:compile(doc('0002.sch'))))
-  return unit:assert-equals(count($r), 1, $r)
+  return count($r)
 };

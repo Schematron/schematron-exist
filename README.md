@@ -1,14 +1,14 @@
-# Schematron for BaseX
+# Schematron for eXist
 
-XQuery module to use ISO Schematron in [BaseX](http://basex.org/). This module uses the standard Schematron implementation from https://code.google.com/p/schematron/. 
+XQuery module to use ISO Schematron in [eXist](http://exist-db.org/). This module uses the standard Schematron implementation from https://code.google.com/p/schematron/. This module is a port of [schematron-basex](https://github.com/vincentml/schematron-basex) to eXist.
 
 ## Usage
 
-Install the module in one of the ways described in the BaseX documentation. Using the GUI, go to the Options menu, Packages, then Install, and select schematron-basex-1.0.xar. Alternatively, use the command `REPO INSTALL schematron-basex-1.0.xar`.
+Install the module in one of the ways described in the BaseX documentation. Using the GUI, go to the Options menu, Packages, then Install, and select schematron-exist-1.0.xar. Alternatively, use the command `REPO INSTALL schematron-exist-1.0.xar`.
 
 After the module is installed, in your XQuery code declare the module import:
 
-    import module namespace schematron = "http://github.com/vincentml/schematron-basex";
+    import module namespace schematron = "http://github.com/vincentml/schematron-exist";
 
 Your Schematron schema file first has to be compiled before it can be used to validate XML. The compiled Schematron can be re-used to validate multiple documents, or possibly stored in a collection for later use.
 
@@ -43,7 +43,7 @@ The message-level method returns 'error', 'warn' or 'info' (or custom values) ba
 Putting this all together:
 
 ```
-import module namespace schematron = "http://github.com/vincentml/schematron-basex";
+import module namespace schematron = "http://github.com/vincentml/schematron-exist";
 
 let $sch := schematron:compile(doc('rules.sch'))
 let $svrl := schematron:validate(doc('document.xml'), $sch)

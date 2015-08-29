@@ -27,10 +27,10 @@ declare %test:assertEquals(
     s:message-level(s:messages($svrl)[2]),
     s:message-level(s:messages($svrl)[3]),
     s:message-level(s:messages($svrl)[4]),
-    data(s:messages($svrl)[3]/@location),
-    normalize-space(data(s:messages($svrl)[3]/*:text)),
-    data(s:messages($svrl)[4]/@location),
-    normalize-space(data(s:messages($svrl)[4]/*:text))
+    s:message-location(s:messages($svrl)[3]),
+    normalize-space(s:message-description(s:messages($svrl)[3])),
+    s:message-location(s:messages($svrl)[4]),
+    normalize-space(s:message-description(s:messages($svrl)[4]))
   )
 };
 
@@ -53,8 +53,8 @@ declare %test:assertEquals(
     s:message-level(s:messages($svrl)[1]),
     s:message-level(s:messages($svrl)[2]),
     s:message-level(s:messages($svrl)[3]),
-    data(s:messages($svrl)[3]/@location),
-    normalize-space(data(s:messages($svrl)[3]/*:text))
+    s:message-location(s:messages($svrl)[3]),
+    normalize-space(s:message-description(s:messages($svrl)[3]))
   )
 };
 

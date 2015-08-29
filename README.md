@@ -16,7 +16,7 @@ Your Schematron schema file first has to be compiled before it can be used to va
 
 If your Schematron contains phases you can specify the phase to use by passing its name in a `phase` parameter.
 
-    let $sch := schematron:compile(doc('rules.sch'), map{'phase': 'phase1'}))
+    let $sch := schematron:compile(doc('rules.sch'), <parameters><param name="phase" value="phase1"/></parameters>)
 
 Next, validate an XML using the compiled Schematron.
 

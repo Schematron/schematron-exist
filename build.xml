@@ -6,8 +6,7 @@
     <property name="build.dir" value="dist"/>
     <target name="xar">
         <mkdir dir="${build.dir}"/>
-        <zip basedir="src/main" destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="${build.dir}/*">
-            <zipfileset dir="." includes="repo.xml,expath-pkg.xml"/>
+        <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="dist/** .gradle/**">
         </zip>
     </target>
 </project>

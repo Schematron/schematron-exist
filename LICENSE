@@ -22,6 +22,6 @@ SOFTWARE.
 
 ---
 
-This software uses the following libraries which carry their own license:
+This software uses the following library which carries its own license:
 
-* The ISO Schematron implementation in XSLT (src/main/content/iso-schematron)
+* The ISO Schematron implementation in XSLT (content/iso-schematron)

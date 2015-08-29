@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
-    <description>Module to use ISO Schematron in eXist</description>
+    <description>Library module to use ISO Schematron in eXist</description>
     <author>Vincent M. Lizzi</author>
     <website>https://github.com/vincentml/schematron-exist</website>
-    <status>alpha</status>
+    <status>stable</status>
     <license>The MIT License</license>
     <copyright>true</copyright>
     <type>library</type>

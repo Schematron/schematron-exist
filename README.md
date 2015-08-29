@@ -1,10 +1,10 @@
 # Schematron for eXist
 
-XQuery module to use ISO Schematron in [eXist](http://exist-db.org/). This module uses the standard Schematron implementation from https://code.google.com/p/schematron/. This module is a port of [schematron-basex](https://github.com/vincentml/schematron-basex) to eXist.
+XQuery library module to use ISO Schematron in [eXist](http://exist-db.org/). This module uses the standard Schematron implementation from https://code.google.com/p/schematron/. This module is a port of [schematron-basex](https://github.com/vincentml/schematron-basex) to eXist.
 
 ## Usage
 
-Install the module in one of the ways described in the BaseX documentation. Using the GUI, go to the Options menu, Packages, then Install, and select schematron-exist-1.0.xar. Alternatively, use the command `REPO INSTALL schematron-exist-1.0.xar`.
+Install the module in the way described in the eXist documentation. Go to the Dashboard and open the Package Manager. Click the add a package button, and then upload schematron-exist-1.0.xar.
 
 After the module is installed, in your XQuery code declare the module import:
 
@@ -54,26 +54,19 @@ return (
 )
 ```
 
-More examples are available in the src/examples folder.
+More examples are available in the `examples` folder.
+
 
 ## Using XPath 2.0 and above
 
-By default XPath 1.0 is supported. This is based on BaseX's XSLT module which by default uses Java's Xalan. XPath 2.0 can be used if Saxon 9.x is available to BaseX. Place saxon9he.jar, saxon9pe.jar, or saxon9ee.jar in the `lib` folder of BaseX (or add the Saxon jar to the classpath). Then make sure the root element of your Schematron specifies `xslt2` in attribute `queryBinding="xslt2"`.
+XPath 2.0 is supported out of the box. Remember to set attribute `queryBinding="xslt2"` on the schema element of your Schematron.
 
 
 ## Developing
 
-This module was developed using BaseX verion 8.2.3 beta, although it may work with earlier versions of BaseX.
+This module was developed using eXist 3.0RC1, although it may work with earlier versions.
 
-To run the unit tests:
+Unit tests are located in the `test` folder. To run the unit tests open `test-suite.xq` in eXide and then click the Eval button.
 
-    basex -t src/test
-
-There are two build scripts included to create a xar file. They are identical except that one can be run by BaseX, and one can be run by Gradle. To build the xar using BaseX:
-
-    basex build.xq
-
-To build the xar using Gradle:
-
-    gradle build
+The included Ant build script build.xml will create a xar file for loading into eXist.
 

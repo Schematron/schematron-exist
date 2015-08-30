@@ -18,3 +18,15 @@ declare %test:assertFalse function _:phase2() {
   return s:is-valid($r)
 };
 
+declare %test:assertTrue function _:phase1string() {
+  let $s := s:compile(doc('0004.sch'), 'phase1')
+  let $r := s:validate(doc('0004.xml'), $s)
+  return s:is-valid($r)
+};
+
+declare %test:assertFalse function _:phase2string() {
+  let $s := s:compile(doc('0004.sch'), 'phase2')
+  let $r := s:validate(doc('0004.xml'), $s)
+  return s:is-valid($r)
+};
+

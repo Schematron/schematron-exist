@@ -33,9 +33,12 @@ declare function _:compile($schematron) as node() {
  : Compile a given Schematron file using given parameters so that it can be used to validate documents. 
  :)
 declare function _:compile($schematron, $params) as node() {
-  let $step1 := transform:transform($schematron, doc($_:include), $params)
-  let $step2 := transform:transform($step1, doc($_:expand), $params)
-  let $step3 := transform:transform($step2, doc($_:compile2), $params)
+  let $p := typeswitch ($params) 
+    case xs:string return <parameters><param name="phase" value="{$params}"/></parameters>
+    default return $params
+  let $step1 := transform:transform($schematron, doc($_:include), $p)
+  let $step2 := transform:transform($step1, doc($_:expand), $p)
+  let $step3 := transform:transform($step2, doc($_:compile2), $p)
   return $step3
 };
 

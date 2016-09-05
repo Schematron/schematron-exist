@@ -4,7 +4,7 @@ XQuery library module to use ISO Schematron in [eXist](http://exist-db.org/). Th
 
 ## Usage
 
-Install the module in the way described in the eXist documentation. Go to the Dashboard and open the Package Manager. Click the add a package button, and then upload schematron-exist-1.0.xar.
+Install the module in the way described in the eXist documentation. Go to the Dashboard and open the Package Manager. Click the add a package button, and then upload schematron-exist-1.1.xar.
 
 After the module is installed, in your XQuery code declare the module import:
 

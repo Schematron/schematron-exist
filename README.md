@@ -1,6 +1,6 @@
 # Schematron for eXist
 
-XQuery library module to use ISO Schematron in [eXist](http://exist-db.org/). This module uses the standard Schematron implementation from https://code.google.com/p/schematron/. This module is a port of [schematron-basex](https://github.com/vincentml/schematron-basex) to eXist.
+XQuery library module to use ISO Schematron in [eXist](http://exist-db.org/). This module uses the standard Schematron implementation from https://code.google.com/p/schematron/. This module is a port of [schematron-basex](https://github.com/Schematron/schematron-basex) to eXist.
 
 ## Usage
 
@@ -8,7 +8,7 @@ Install the module in the way described in the eXist documentation. Go to the Da
 
 After the module is installed, in your XQuery code declare the module import:
 
-    import module namespace schematron = "http://github.com/vincentml/schematron-exist";
+    import module namespace schematron = "http://github.com/Schematron/schematron-exist";
 
 Your Schematron schema file first has to be compiled before it can be used to validate XML. The compiled Schematron can be re-used to validate multiple documents, or possibly stored in a collection for later use.
 
@@ -55,7 +55,7 @@ To get the XPath location where a message was generated:
 Putting this all together:
 
 ```
-import module namespace schematron = "http://github.com/vincentml/schematron-exist";
+import module namespace schematron = "http://github.com/Schematron/schematron-exist";
 
 let $sch := schematron:compile(doc('rules.sch'))
 let $svrl := schematron:validate(doc('document.xml'), $sch)

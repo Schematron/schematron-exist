@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://expath.org/ns/pkg" 
-    name="http://github.com/vincentml/schematron-exist" 
+    name="http://github.com/Schematron/schematron-exist" 
     abbrev="schematron-exist" 
-    version="1.0" 
+    version="1.1" 
     spec="1.0">
     <title>Schematron for eXist-db</title>
     <dependency processor="eXist-db"/>
     <xquery>
-        <namespace>http://github.com/vincentml/schematron-exist</namespace>
+        <namespace>http://github.com/Schematron/schematron-exist</namespace>
         <file>schematron.xqm</file>
     </xquery>
 </package>

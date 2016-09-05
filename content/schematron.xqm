@@ -4,10 +4,10 @@
  : @author Vincent M. Lizzi
  : @see LICENSE (The MIT License)
  : @see http://exist-db.org/
- : @see http://github.com/vincentml/schematron-exist
+ : @see http://github.com/Schematron/schematron-exist
  :)
 
-module namespace _ = "http://github.com/vincentml/schematron-exist";
+module namespace _ = "http://github.com/Schematron/schematron-exist";
 
 declare namespace sch = "http://purl.oclc.org/dsdl/schematron";
 declare namespace svrl = "http://purl.oclc.org/dsdl/svrl";

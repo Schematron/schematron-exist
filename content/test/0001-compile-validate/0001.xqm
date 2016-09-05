@@ -1,6 +1,6 @@
 module namespace _ = "0001";
 
-import module namespace s = "http://github.com/vincentml/schematron-exist" at "../../schematron.xqm";
+import module namespace s = "http://github.com/Schematron/schematron-exist" at "../../schematron.xqm";
 
 declare namespace svrl="http://purl.oclc.org/dsdl/svrl";
 declare namespace xsl="http://www.w3.org/1999/XSL/Transform";

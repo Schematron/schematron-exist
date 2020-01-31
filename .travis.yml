@@ -1,0 +1,41 @@
+notifications:
+  email: false
+
+language: java
+
+jdk:
+  - openjdk8
+  # - openjdk11
+
+services:
+  - docker
+
+env:
+  # TODO support versions 5.0.0 and up
+  # - img=existdb/existdb:latest
+  # - img=existdb/existdb:release
+  # - img=existdb/existdb:5.0.0
+  - img=existdb/existdb:4.7.1
+  - img=evolvedbinary/exist-db:eXist-3.6.1-minimal
+
+
+before_install:
+  - docker pull $img
+  - docker create  --name exist-ci -p 8080:8080 $img
+
+install:
+  - ant
+
+before_script:
+  - docker cp ./dist/*.xar exist-ci:exist/autodeploy/a1.xar
+  - docker start exist-ci
+  # exist needs time
+  - sleep 30
+  - docker ps
+
+script:
+  - curl -s "http://0.0.0.0:8080/exist/rest/db/system/repo/schematron-exist-1.2.0/content/test/test-suite.xq" -o result/test-result.xml
+  - bats -t result/*.bats
+
+after_success:
+  - docker stop exist-ci

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="xar" name="schematron-exist">
   <xmlproperty file="expath-pkg.xml"/>
+  <!-- TODO get version out of xar name -->
   <property name="project.version" value="${package(version)}"/>
   <property name="project.app" value="${package(abbrev)}"/>
   <property name="build.dir" value="dist"/>
+  <xmlproperty file="result/test-result.xml" collapseAttributes="true" keepRoot="false"/>
   <target name="clean" description="cleaning old builds">
     <delete failonerror="false">
       <fileset dir="${build.dir}">
@@ -27,5 +29,21 @@
       <arg value="-t"/>
       <arg value="result/test.bats"/>
     </exec>
+  </target>
+  <target name="test" depends='test-runner' description="parse test results">
+    <echoproperties prefix="testsuite.failures"/>
+    <!-- <fail message="There are failing tests">
+      <condition>
+        <matches string="${testsuite.failures}" pattern="^0,0,0,0,0$"/>
+      </condition>
+    </fail> -->
+    <echoproperties prefix="testsuite.errors"/>
+    <!-- <fail message="There are test errors">
+      <condition>
+          <matches string="${testsuite.errors}" pattern="^0,0,0,0,0$"/>
+
+      </condition>
+    </fail> -->
+    <!-- <echoproperties/> -->
   </target>
 </project>

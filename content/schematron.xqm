@@ -1,10 +1,12 @@
-(:~ 
+(:~
  : Schematron module for eXist
  :
  : @author Vincent M. Lizzi
+ : @author Duncan Paterson
  : @see LICENSE (The MIT License)
  : @see http://exist-db.org/
  : @see http://github.com/Schematron/schematron-exist
+ : @version 1.1.0
  :)
 
 module namespace _ = "http://github.com/Schematron/schematron-exist";

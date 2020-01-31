@@ -1,16 +1,16 @@
-import module namespace schematron = "http://github.com/Schematron/schematron-exist" at "/db/apps/schematron-exist/content/schematron.xqm";
+import module namespace schematron = "http://github.com/Schematron/schematron-exist";
 
 let $sch := schematron:compile(doc('example-1.sch'))
 for $file in ('example-1a.xml', 'example-1b.xml', 'example-1c.xml')
 let $svrl := schematron:validate(doc($file), $sch)
 return (
-  concat('*** ', $file, ' ***'), 
+  concat('*** ', $file, ' ***'),
   if (schematron:is-valid($svrl)) then 'Valid!' else 'Not valid!',
-  if (schematron:has-messages($svrl)) then 
-    for $message in schematron:messages($svrl) 
+  if (schematron:has-messages($svrl)) then
+    for $message in schematron:messages($svrl)
     return concat(
       schematron:message-level($message)
-      , ': ', 
+      , ': ',
       schematron:message-description($message)
       , ' (location: ',
       schematron:message-location($message)

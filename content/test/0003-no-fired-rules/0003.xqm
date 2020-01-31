@@ -1,6 +1,6 @@
 module namespace _ = "0003";
 
-import module namespace s = "http://github.com/Schematron/schematron-exist" at "../../schematron.xqm";
+import module namespace s = "http://github.com/Schematron/schematron-exist";
 
 declare namespace test="http://exist-db.org/xquery/xqsuite";
 

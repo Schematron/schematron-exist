@@ -1,6 +1,6 @@
 module namespace _ = "0004";
 
-import module namespace s = "http://github.com/Schematron/schematron-exist" at "../../schematron.xqm";
+import module namespace s = "http://github.com/Schematron/schematron-exist";
 
 declare namespace test="http://exist-db.org/xquery/xqsuite";
 
@@ -29,4 +29,3 @@ declare %test:assertFalse function _:phase2string() {
   let $r := s:validate(doc('0004.xml'), $s)
   return s:is-valid($r)
 };
-

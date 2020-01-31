@@ -4,23 +4,29 @@
   <property name="project.version" value="${package(version)}"/>
   <property name="project.app" value="${package(abbrev)}"/>
   <property name="build.dir" value="dist"/>
+  <!-- <xmlproperty file="result/test-result.xml" collapseAttributes="true" keepRoot="false"/> -->
   <target name="clean" description="cleaning old builds">
-    <tstamp/>
     <delete failonerror="false">
       <fileset dir="${build.dir}">
         <include name="*.xar"/>
       </fileset>
+      <fileset dir="result">
+        <include name="*.xml"/>
+      </fileset>
     </delete>
   </target>
   <target name="xar" depends='clean' description="compile all source files">
-    <tstamp/>
     <mkdir dir="${build.dir}"/>
-    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="dist/**"></zip>
+    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="dist/** result/**"/>
   </target>
-  <target name="test" description="running tests">
-    <tstamp/>
-    <exec executable="echo" failonerror="true">
-      <arg value="'Hello test'"/>
+  <target name="test" description="executing tests" depends='clean'>
+    <exec executable="curl" output="result/test-result.xml">
+      <arg value="-s"/>
+      <arg value="http://0.0.0.0:8080/exist/rest/db/system/repo/schematron-exist-1.1.0/content/test/test-suite.xq"/>
+    </exec>
+    <exec executable="bats">
+      <arg value="-t"/>
+      <arg value="result/test.bats"/>
     </exec>
   </target>
 </project>

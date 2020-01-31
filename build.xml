@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="xar" name="schematron-exist">
-    <xmlproperty file="expath-pkg.xml"/>
-    <property name="project.version" value="${package(version)}"/>
-    <property name="project.app" value="${package(abbrev)}"/>
-    <property name="build.dir" value="dist"/>
-    <target name="xar">
-        <mkdir dir="${build.dir}"/>
-        <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="dist/** .gradle/**">
-        </zip>
-    </target>
+  <xmlproperty file="expath-pkg.xml"/>
+  <property name="project.version" value="${package(version)}"/>
+  <property name="project.app" value="${package(abbrev)}"/>
+  <property name="build.dir" value="dist"/>
+  <target name="clean" description="cleaning old builds">
+    <delete failonerror="false">
+      <fileset dir="${build.dir}">
+        <include name="*.xar"/>
+      </fileset>
+      <fileset dir="result">
+        <include name="*.xml"/>
+      </fileset>
+    </delete>
+  </target>
+  <target name="xar" depends='clean' description="compile all source files">
+    <mkdir dir="${build.dir}"/>
+    <zip basedir="." destfile="${build.dir}/${project.app}.xar" excludes="dist/** result/** *.xpr"/>
+  </target>
+  <target name="test" description="executing tests">
+    <exec executable="curl" output="result/test-result.xml">
+      <arg value="-s"/>
+      <arg value="http://0.0.0.0:8080/exist/rest/db/system/repo/${project.app}-${project.version}/content/test/test-suite.xq"/>
+    </exec>
+    <exec executable="bats">
+      <arg value="-t"/>
+      <arg value="result/test.bats"/>
+    </exec>
+  </target>
 </project>

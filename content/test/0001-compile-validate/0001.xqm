@@ -6,15 +6,30 @@ declare namespace svrl="http://purl.oclc.org/dsdl/svrl";
 declare namespace xsl="http://www.w3.org/1999/XSL/Transform";
 declare namespace test="http://exist-db.org/xquery/xqsuite";
 
+declare variable $_:schema := document {
+    <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" xmlns:sqf="http://www.schematron-quickfix.com/validator/process" queryBinding="xslt">
+</sch:schema>
+};
 
-declare %test:assertExists function _:compile() {
-  let $c := s:compile(doc('0001.sch'))
+declare variable $_:xml := document {
+    <document/>
+};
+
+
+declare
+%test:assertExists
+%test:name('compile')
+function _:compile() {
+  let $c := s:compile($_:schema)
   return $c[self::xsl:stylesheet]
 };
 
-declare %test:assertExists function _:validationResult() {
-  let $c := s:compile(doc('0001.sch'))
-  let $r := s:validate(doc('0001.xml'), $c)
+declare
+%test:assertExists
+%test:name('validate')
+function _:validationResult() {
+  let $c := s:compile($_:schema)
+  let $r := s:validate($_:xml, $c)
   return $r[self::svrl:schematron-output]
 };
 

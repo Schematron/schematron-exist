@@ -4,22 +4,66 @@ import module namespace s = "http://github.com/Schematron/schematron-exist" at "
 
 declare namespace test="http://exist-db.org/xquery/xqsuite";
 
-declare %test:assertTrue function _:valid() {
-  let $r := s:validate(doc('0002-valid.xml'), s:compile(doc('0002.sch')))
+declare variable $_:schema := document {
+    <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" xmlns:sqf="http://www.schematron-quickfix.com/validator/process" queryBinding="xslt">
+    <sch:pattern>
+        <sch:rule context="title">
+            <sch:assert test="following-sibling::p">
+                title should be followed by a p (paragraph) element
+            </sch:assert>
+        </sch:rule>
+        <sch:rule context="p">
+            <sch:assert test="boolean(normalize-space())">
+                p (paragraph) should not be empty
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+</sch:schema>
+};
+
+declare variable $_:valid := document {
+<document>
+    <title>Schematron for eXist</title>
+    <p>This is a test of running ISO Schematron in eXist</p>
+</document>
+};
+
+declare variable $_:invalid := document {
+<document>
+    <title>Schematron for eXist</title>
+    <p>This is a test of running ISO Schematron in eXist</p>
+    <p/>
+</document>
+};
+
+declare
+%test:assertTrue
+%test:name('simple valid')
+function _:valid() {
+  let $r := s:validate($_:valid, s:compile($_:schema))
   return s:is-valid($r)
 };
 
-declare %test:assertFalse function _:invalid() {
-  let $r := s:validate(doc('0002-invalid.xml'), s:compile(doc('0002.sch')))
+declare
+%test:assertFalse
+%test:name('simple invalid')
+function _:invalid() {
+  let $r := s:validate($_:invalid, s:compile($_:schema))
   return s:is-valid($r)
 };
 
-declare %test:assertEmpty function _:valid-messages() {
-  let $r := s:messages(s:validate(doc('0002-valid.xml'), s:compile(doc('0002.sch'))))
+declare
+%test:assertEmpty
+%test:name('valid message')
+function _:valid-messages() {
+  let $r := s:messages(s:validate($_:valid, s:compile($_:schema)))
   return $r
 };
 
-declare %test:assertEquals(1) function _:invalid-messages() {
-  let $r := s:messages(s:validate(doc('0002-invalid.xml'), s:compile(doc('0002.sch'))))
+declare
+%test:assertEquals(1)
+%test:name('invalid message')
+function _:invalid-messages() {
+  let $r := s:messages(s:validate($_:invalid, s:compile($_:schema)))
   return count($r)
 };

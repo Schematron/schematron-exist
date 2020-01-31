@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package xmlns="http://expath.org/ns/pkg" 
-    name="http://github.com/Schematron/schematron-exist" 
-    abbrev="schematron-exist" 
-    version="1.1" 
+<package xmlns="http://expath.org/ns/pkg"
+    name="http://github.com/Schematron/schematron-exist"
+    abbrev="schematron-exist"
+    version="2.0.0"
     spec="1.0">
     <title>Schematron for eXist-db</title>
-    <dependency processor="eXist-db"/>
+    <dependency processor="eXist-db" semver-min='3.0.0' semver-max="4.8.0"/>
+    <!-- <xslt>
+      <import-uri></import-uri>
+      <file>iso_dsdl_include.xsl</file>
+   </xslt> -->
     <xquery>
         <namespace>http://github.com/Schematron/schematron-exist</namespace>
         <file>schematron.xqm</file>

@@ -1,9 +1,9 @@
 # Schematron for eXist
+[![Build Status](https://travis-ci.com/duncdrum/schematron-exist.svg?branch=master)](https://travis-ci.com/duncdrum/schematron-exist)
 
 XQuery library module to use ISO Schematron in [eXist](http://exist-db.org/). This module uses the standard Schematron implementation from [https://code.google.com/p/schematron/](https://code.google.com/p/schematron/). This module is a port of [schematron-basex](https://github.com/Schematron/schematron-basex) to eXist.
 
 ## Usage
-
 Install the module in the way described in the eXist documentation. Go to the Dashboard and open the Package Manager. Click the add a package button, and then upload `schematron-exist-1.1.xar`.
 
 After the module is installed, in your XQuery code declare the module import:

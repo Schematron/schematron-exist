@@ -16,7 +16,7 @@
   </target>
   <target name="xar" depends='clean' description="compile all source files">
     <mkdir dir="${build.dir}"/>
-    <zip basedir="." destfile="${build.dir}/${project.app}.xar" excludes="dist/** result/**"/>
+    <zip basedir="." destfile="${build.dir}/${project.app}.xar" excludes="dist/** result/** *.xpr"/>
   </target>
   <target name="test" description="executing tests" depends='clean'>
     <exec executable="curl" output="result/test-result.xml">

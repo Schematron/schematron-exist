@@ -15,8 +15,9 @@ module namespace _ = "http://github.com/Schematron/schematron-exist";
 declare namespace sch = "http://purl.oclc.org/dsdl/schematron";
 declare namespace svrl = "http://purl.oclc.org/dsdl/svrl";
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
+declare namespace xmldb = "http://exist-db.org/xquery/xmldb";
 
-declare variable $_:path := '/db/system/repo/schematron-exist/content/iso-schematron-2.0.0/';
+declare variable $_:path := '/db/system/repo/schematron-exist-2.0.0/content/iso-schematron/';
 
 declare variable $_:include := $_:path || "iso_dsdl_include.xsl";
 declare variable $_:expand := $_:path || "iso_abstract_expand.xsl";

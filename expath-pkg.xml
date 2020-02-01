@@ -6,10 +6,9 @@
     spec="1.0">
     <title>Schematron for eXist-db</title>
     <dependency processor="eXist-db" semver-min='4.7.1'/>
-    <xslt>
-      <import-uri>http://www.functx.com/functx.xsl</import-uri>
-      <file>functx.xsl</file>
-   </xslt>
+    <!-- <xslt>
+      <file>iso_dsdl_include.xsl</file>
+   </xslt> -->
     <xquery>
         <namespace>http://github.com/Schematron/schematron-exist</namespace>
         <file>schematron.xqm</file>

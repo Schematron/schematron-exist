@@ -1,4 +1,151 @@
 <?xml version="1.0" ?>
+<!-- 
+   ISO_SVRL.xsl   
+
+   Implementation of Schematron Validation Report Language from ISO Schematron
+   ISO/IEC 19757 Document Schema Definition Languages (DSDL) 
+     Part 3: Rule-based validation  Schematron 
+     Annex D: Schematron Validation Report Language 
+
+  This ISO Standard is available free as a Publicly Available Specification in PDF from ISO.
+  Also see www.schematron.com for drafts and other information.
+
+  This implementation of SVRL is designed to run with the "Skeleton" implementation 
+  of Schematron which Oliver Becker devised. The skeleton code provides a 
+  Schematron implementation but with named templates for handling all output; 
+  the skeleton provides basic templates for output using this API, but client
+  validators can be written to import the skeleton and override the default output
+  templates as required. (In order to understand this, you must understand that
+  a named template such as "process-assert" in this XSLT stylesheet overrides and
+  replaces any template with the same name in the imported skeleton XSLT file.)
+
+  The other important thing to understand in this code is that there are different
+  versions of the Schematron skeleton. These track the development of Schematron through
+  Schematron 1.5, Schematron 1.6 and now ISO Schematron. One only skeleton must be
+  imported. The code has templates for the different skeletons commented out for 
+  convenience. ISO Schematron has a different namespace than Schematron 1.5 and 1.6;
+  so the ISO Schematron skeleton has been written itself with an optional import
+  statement to in turn import the Schematron 1.6 skeleton. This will allow you to 
+  validate with schemas from either namespace.
+  
+
+  History: 
+   	2010-07-10
+   		* MIT license
+    2010-04-14
+        * Add command line parameter 'terminate' which will terminate on first failed 
+        assert and (optionally) successful report. 
+    2009-03-18
+    	* Fix atrribute with space "see " which generates wrong name in some processors
+    	* rename allow-foreign to allow-rich
+  
+    2009-02-19
+    	* RJ add experimental non-standard attribute active-pattern/@document which says which
+    	document is being validated from that point to the next similar. This is to cope with the
+    	experimental multi-document validation in the XSLT2 skeleton.
+    2008-08-19
+  		* RJ Experimental: Handle property elements. NOTE: signature change for process-assert,
+  		process-report and process-rule to add property.
+  	2008-08-11
+   		* RJ Fix attribute/@select which saxon allows  in XSLT 1
+   2008-08-07
+    	* RJ Add output-encoding attribute to specify final encoding to use
+    	* Alter allow-foreign functionality so that Schematron span, emph and dir elements make 
+    	  it to the output, for better formatting and because span can be used to mark up
+    	  semantically interesting information embedded in diagnostics, which reduces the
+    	  need to extend SVRL itself
+    	* Diagnostic-reference had an invalid attribute @id that duplicated @diagnostic: removed
+  	2008-08-06
+    	* RJ Fix invalid output:  svrl:diagnostic-reference is not contained in an svrl:text
+    	* Output comment to SVRL file giving filename if available (from command-line parameter)
+  	2008-08-04
+  		* RJ move sch: prefix to schold: prefix to prevent confusion (we want people to
+  		be able to switch from old namespace to new namespace without changing the
+  		sch: prefix, so it is better to keep that prefix completely out of the XSLT)
+  		* Extra signature fixes (PH)
+    2008-08-03
+    	* Repair missing class parameter on process-p
+    2008-07-31
+    	* Update skeleton names
+    2007-04-03 
+    	* Add option generate-fired-rule (RG)
+    2007-02-07
+    	* Prefer true|false for parameters. But allow yes|no on some old for compatability
+    	* DP Diagnostics output to svrl:text. Diagnosis put out after assertion text.
+      	* Removed non-SVRL elements and attributes: better handled as an extra layer that invokes this one
+      	* Add more formal parameters
+      	* Correct confusion between $schemaVersion and $queryBinding
+     	* Indent
+     	* Validate against RNC schemas for XSLT 1 and 2 (with regex tests removed)
+     	* Validate output with UniversalTest.sch against RNC schema for ISO SVRL
+    	
+    2007-02-01
+       	* DP. Update formal parameters of overriding named templates to handle more attributes.
+       	* DP. Refactor handling of rich and linkable parameters to a named template.
+
+    2007-01-22
+    	* DP change svrl:ns to svrl:ns-in-attribute-value
+		* Change default when no queryBinding from "unknown" to "xslt"
+	
+    2007-01-18:
+     	* Improve documentation
+     	* KH Add command-line options to generate paths or not 
+       	* Use axsl:attribute rather than xsl:attribute to shut XSLT2 up
+       	* Add extra command-line options to pass to the iso_schematron_skeleton
+  
+    2006-12-01: iso_svrl.xsl Rick Jelliffe, 
+          * update namespace, 
+          * update phase handling,
+          * add flag param to process-assert and process-report & @ flag on output
+  
+    2001: Conformance1-5.xsl Rick Jelliffe, 
+          * Created, using the skeleton code contributed by Oliver Becker
+-->
+<!--
+Open Source Initiative OSI - The MIT License:Licensing
+[OSI Approved License]
+
+This source code was previously available under the zlib/libpng license. 
+Attribution is polite.
+
+The MIT License
+
+Copyright (c) 2004-2010 Rick Jellife and Academia Sinica Computing Centre, Taiwan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<!-- Ideas nabbed from schematrons by Francis N., Miloslav N. and David C. -->
+
+<!-- The command-line parameters are:
+  			phase           NMTOKEN | "#ALL" (default) Select the phase for validation
+    		allow-foreign   "true" | "false" (default)   Pass non-Schematron elements and rich markup to the generated stylesheet 
+            diagnose= true | false|yes|no    Add the diagnostics to the assertion test in reports (yes|no are obsolete)
+            property= true | false           Experimental: Add properties to the assertion test in reports  
+            generate-paths=true|false|yes|no   generate the @location attribute with XPaths (yes|no are obsolete)
+            sch.exslt.imports semi-colon delimited string of filenames for some EXSLT implementations          
+   		 optimize        "visit-no-attributes"     Use only when the schema has no attributes as the context nodes
+		 generate-fired-rule "true"(default) | "false"  Generate fired-rule elements
+             terminate= yes | no | true | false | assert  Terminate on the first failed assertion or successful report
+                                         Note: whether any output at all is generated depends on the XSLT implementation.
+-->
+
 <xsl:stylesheet
    version="1.0"
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

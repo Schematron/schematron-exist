@@ -4,7 +4,6 @@
   <property name="project.version" value="${package(version)}"/>
   <property name="project.app" value="${package(abbrev)}"/>
   <property name="build.dir" value="dist"/>
-  <!-- <xmlproperty file="result/test-result.xml" collapseAttributes="true" keepRoot="false"/> -->
   <target name="clean" description="cleaning old builds">
     <delete failonerror="false">
       <fileset dir="${build.dir}">
@@ -17,7 +16,7 @@
   </target>
   <target name="xar" depends='clean' description="compile all source files">
     <mkdir dir="${build.dir}"/>
-    <zip basedir="." destfile="${build.dir}/${project.app}-${project.version}.xar" excludes="dist/** result/**"/>
+    <zip basedir="." destfile="${build.dir}/${project.app}.xar" excludes="dist/** result/**"/>
   </target>
   <target name="test" description="executing tests" depends='clean'>
     <exec executable="curl" output="result/test-result.xml">

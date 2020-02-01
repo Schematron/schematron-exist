@@ -2,9 +2,8 @@
 
 
 # https://github.com/bats-core/bats-core#printing-to-the-terminal
-
-@test "Testuite reports no failures or errors" {
-  run xmllint --xpath '//@failures > 0 or //@errors > 0' result/*.xml
+@test "Testuite reporte no failures" {
+  run xmllint --xpath '//@failures = 0' result/*.xml
   [ "$status" -eq 0 ]
   [ "$output" = false ]
 }

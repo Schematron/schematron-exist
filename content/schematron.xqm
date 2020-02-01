@@ -1,3 +1,4 @@
+xquery version "3.1";
 (:~
  : Schematron module for eXist
  :
@@ -15,11 +16,12 @@ declare namespace sch = "http://purl.oclc.org/dsdl/schematron";
 declare namespace svrl = "http://purl.oclc.org/dsdl/svrl";
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 
-(: TODO replace with xs:anyURI calls :)
-declare variable $_:include := "/db/system/repo/schematron-exist-1.2.0/content/iso-schematron/iso_dsdl_include.xsl";
-declare variable $_:expand := "/db/system/repo/schematron-exist-1.2.0/content/iso-schematron/iso_abstract_expand.xsl";
-declare variable $_:compile1 := "/db/system/repo/schematron-exist-1.2.0/content/iso-schematron/iso_svrl_for_xslt1.xsl";
-declare variable $_:compile2 := "/db/system/repo/schematron-exist-1.2.0/content/iso-schematron/iso_svrl_for_xslt2.xsl";
+declare variable $_:path := '/db/system/repo/schematron-exist/content/iso-schematron-2.0.0/';
+
+declare variable $_:include := $_:path || "iso_dsdl_include.xsl";
+declare variable $_:expand := $_:path || "iso_abstract_expand.xsl";
+declare variable $_:compile1 := $_:path || "iso_svrl_for_xslt1.xsl";
+declare variable $_:compile2 := $_:path || "iso_svrl_for_xslt2.xsl";
 
 declare variable $_:error := ('error', 'fatal');
 declare variable $_:warn := ('warn', 'warning');

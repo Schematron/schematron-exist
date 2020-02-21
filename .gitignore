@@ -1,3 +1,4 @@
 dist/
-result/*.xml
+test/result/*.xml
 *.xpr
+.notes.txt

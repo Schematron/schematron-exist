@@ -9,23 +9,25 @@
       <fileset dir="${build.dir}">
         <include name="*.xar"/>
       </fileset>
-      <fileset dir="result">
+      <fileset dir="test/result">
         <include name="*.xml"/>
       </fileset>
     </delete>
+    <mkdir dir="test/result"/>
   </target>
   <target name="xar" depends='clean' description="compile all source files">
     <mkdir dir="${build.dir}"/>
-    <zip basedir="." destfile="${build.dir}/${project.app}.xar" excludes="dist/** result/** *.xpr"/>
+    <zip basedir="." destfile="${build.dir}/${project.app}.xar" excludes="dist/** test/result/** *.xpr"/>
   </target>
-  <target name="test" description="executing tests" depends='clean'>
-    <exec executable="curl" output="result/test-result.xml">
-      <arg value="-s"/>
-      <arg value="http://0.0.0.0:8080/exist/rest/db/system/repo/schematron-exist-1.1.0/content/test/test-suite.xq"/>
+  <target name="test" description="executing tests">
+    <mkdir dir="test/result"/>
+    <exec executable="curl" output="test/result/test-result.xml">
+      <arg value="-sL"/>
+      <arg value="http://0.0.0.0:8080/exist/rest/db/system/repo/${project.app}-${project.version}/test/test-suite.xq"/>
     </exec>
     <exec executable="bats">
       <arg value="-t"/>
-      <arg value="result/test.bats"/>
+      <arg value="test/test.bats"/>
     </exec>
   </target>
 </project>

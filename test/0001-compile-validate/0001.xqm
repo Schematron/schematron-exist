@@ -8,6 +8,7 @@ declare namespace test="http://exist-db.org/xquery/xqsuite";
 
 declare variable $_:schema := document {
     <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" xmlns:sqf="http://www.schematron-quickfix.com/validator/process" queryBinding="xslt">
+
 </sch:schema>
 };
 
@@ -18,7 +19,7 @@ declare variable $_:xml := document {
 
 declare
 %test:assertExists
-%test:name('compile')
+%test:name('compile empty schema')
 function _:compile() {
   let $c := s:compile($_:schema)
   return $c[self::xsl:stylesheet]
@@ -26,7 +27,7 @@ function _:compile() {
 
 declare
 %test:assertExists
-%test:name('validate')
+%test:name('validate empty document')
 function _:validationResult() {
   let $c := s:compile($_:schema)
   let $r := s:validate($_:xml, $c)

@@ -38,7 +38,7 @@ declare variable $_:invalid := document {
 
 declare
 %test:assertTrue
-%test:name('simple valid')
+%test:name('simple pass')
 function _:valid() {
   let $r := s:validate($_:valid, s:compile($_:schema))
   return s:is-valid($r)
@@ -46,7 +46,7 @@ function _:valid() {
 
 declare
 %test:assertFalse
-%test:name('simple invalid')
+%test:name('simple fail')
 function _:invalid() {
   let $r := s:validate($_:invalid, s:compile($_:schema))
   return s:is-valid($r)

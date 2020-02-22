@@ -1,4 +1,116 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?><?xar XSLT?>
+
+<!-- 
+     OVERVIEW : iso_dsdl_include.xsl
+     
+	    This is an inclusion preprocessor for the non-smart text inclusions
+	    of ISO DSDL. It handles 
+	    	<relax:extRef> for ISO RELAX NG
+	    	<sch:include>  for ISO Schematron and Schematron 1.n
+	    	<sch:extends>  for 2009 draft ISO Schematron
+	    	<xi:xinclude>  simple W3C XIncludes for ISO NVRL and DSRL 
+	    	<crdl:ref>     for draft ISO CRDL
+	    	<dtll:include> for draft ISO DTLL
+	    	<* @xlink:href> for simple W3C XLink 1.1 embedded links
+	    	
+		 
+		This should be the first in any chain of processing. It only requires
+		XSLT 1. Each kind of inclusion can be turned off (or on) on the command line.
+		
+		Ids in fragment identifiers or xpointers will be sought in the following
+		order:
+		    * @xml:id
+		    * id() for typed schemas (e.g. from DTD) [NOTE: XInclude does not support this]
+		    * untyped @id 
+		    
+	The proposed behaviour for the update to ISO Schematron has been implemented. If an
+	include points to an element with the same name as the parent, then that element's
+	contents will be included. This supports the merge style of inclusion.    
+	
+	When an inclusion is made, it is preceded by a PI with target DSDL_INCLUDE_START
+	and the href and closed by a PI with target DSDL_INCLUDE_START and the href. This is
+	to allow better location of problems, though only to the file level. 
+	
+	Limitations:
+	* No rebasing: relative paths will be interpreted based on the initial document's
+	path, not the including document. (Severe limitation!)
+	* No checking for circular references
+	* Not full xpointers: only ID matching
+	* <relax:include> not implemented 
+	* XInclude handling of xml:base and xml:lang not implemented   
+-->
+<!--
+Open Source Initiative OSI - The MIT License:Licensing
+[OSI Approved License]
+
+This source code was previously available under the zlib/libpng license. 
+Attribution is polite.
+
+The MIT License
+
+Copyright (c) 2008-2010 Rick Jelliffe
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<!-- 
+  VERSION INFORMATION
+    2010-07-10
+    * Move to MIT license
+    2010-04-21
+    * Add basic syntax checks on XPaths belonging to Schematron elements only
+    * Unlocalized messages are put out using xsl:message. The intent is to allow
+    * problems to be caught at compile time. 
+	2009-02-25 
+	* Update DSDL namespace to use schematron.com
+	* Tested with SAXON9, Xalan 2.7.1, IE7, 
+	* IE does not like multiple variables in same template with same name: rename.   
+	2008-09-18
+	* Remove new behaviour for include, because it conflicts with existing usage [KH]
+	* Add extends[@href] element with that merge functionality
+	* Generate PIs to notate source of inclusions for potential better diagnostics
+	
+	2008-09-16
+	* Fix for XSLT1
+	
+	2008-08-28
+	* New behaviour for schematron includes: if the pointed to element is the same as the current,
+	include the children. [Note: this has been removed: use sch:extends with @href.]
+	
+	2008-08-20
+	* Fix bug: in XSLT1 cannot do $document/id('x') but need to use for-each
+	
+	2008-08-04
+	* Add support for inclusions in old namespace  
+	
+	2008-08-03
+	* Fix wrong param name include-relaxng & include-crdl (KH, PH)
+	* Allow inclusion of XSLT and XHTML (KH)
+	* Fix inclusion of fragments (KH)
+	
+	2008-07-25
+	* Add selectable input parameter
+	
+	2008-07-24  
+	* RJ New
+-->
+
 <xslt:stylesheet version="1.0"
 	xmlns:xslt="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

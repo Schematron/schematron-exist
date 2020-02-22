@@ -1,0 +1,4 @@
+dist/
+test/result/*.xml
+*.xpr
+.notes.txt

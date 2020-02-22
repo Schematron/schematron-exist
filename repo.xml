@@ -2,12 +2,10 @@
 <meta xmlns="http://exist-db.org/xquery/repo">
     <description>Library module to use ISO Schematron in eXist</description>
     <author>Vincent M. Lizzi</author>
+    <author>Duncan Paterson</author>
     <website>https://github.com/Schematron/schematron-exist</website>
     <status>stable</status>
     <license>The MIT License</license>
     <copyright>true</copyright>
     <type>library</type>
-    <target>schematron-exist</target>
-    <prepare/>
-    <finish/>
 </meta>

@@ -1,41 +1,47 @@
 notifications:
   email: false
-
 language: java
-
 jdk:
-  - openjdk8
-  # - openjdk11
-
+- openjdk8
+addons:
+  apt:
+    packages:
+    - libxml2-utils
 services:
-  - docker
-
+- docker
 env:
-  # TODO support versions 5.0.0 and up
-  # - img=existdb/existdb:latest
-  # - img=existdb/existdb:release
-  # - img=existdb/existdb:5.0.0
-  - img=existdb/existdb:4.7.1
-  - img=evolvedbinary/exist-db:eXist-3.6.1-minimal
-
+- img=existdb/existdb:4.7.1
+- img=evolvedbinary/exist-db:eXist-3.6.1-minimal
+jobs:
+  include:
+    - stage: GitHub Release
+      before_install: skip
+      before_script: skip
+      script: skip
+      after_success: skip
+      deploy:
+        provider: releases
+        token:
+          secure: CmdGlijuVza6Sxp7SBb0A9xuLPX24MJoFZeZF25T/8OlWBf4LeQ7lQnQgeThfuto+iOGlleNPm/641n1Cm+9Qb95AJA9G06R/7aBw7wkVGC34fNiDODnkor/UalB//uwlGjvg8oMR0OYMhQDqJVfz+HgyxCmdy297abt9iV/t7lMsP7rctMKUvRkXgntGwSP8LrNqo9bocZV0SgE3x2nzgMId0o9mirR+yeAPvPGqaE7aJcl5hbh51JGwSVUi5xNBNW3tI0ztFdbrX1u8rGY74hEUkL93ZEicu8wwttU8cTeBOSSWF2TpRWyVRbrqhAwvklhOtnk+RQm72TaUp41ibN+t+t1FVMq2Ae5CUh+X2ZoLXuw7FDw4HmeQR4mNyVlToDlTgG4r0iZVEjIx7JFOZ1xXTb21I6fDeaJG2EvUQ7XtHUkJRHucWohwliImRQoklUOy1b/q/8iIxBrcukC9Zx2f8Sae8zKyBWW6m4Z8qAerV1W3euP/R3wcchJ/gtdUxTM5bF+r6OdmoywjEd7Wu1Yvcp0EW7IcUCTni0PQQbOsJ4ii7qvNNOqNCpibLmtzKQPLm4/GLYp2LHKTTlmEUmQWc7Ko5lXCEr7j0Adtl5dIa8+zNG4Seiwu8fSy3VwbrhL4EsV6gGYcQfkwx9F84zsl7QAUQBWbDstlzFbc0I=
+        file: dist/*.xar
+        cleanup: false
+        on:
+          tags: true
 
 before_install:
-  - docker pull $img
-  - docker create  --name exist-ci -p 8080:8080 $img
-
+- docker pull $img
+- docker create  --name exist-ci -p 8080:8080 $img
 install:
-  - ant
-
+- ant
+- npm install -g bats
 before_script:
-  - docker cp ./dist/*.xar exist-ci:exist/autodeploy/a1.xar
-  - docker start exist-ci
-  # exist needs time
-  - sleep 30
-  - docker ps
-
+- docker cp ./dist/*.xar exist-ci:exist/autodeploy/a1.xar
+- docker start exist-ci
+- sleep 30
+- docker ps
 script:
-  - curl -s "http://0.0.0.0:8080/exist/rest/db/system/repo/schematron-exist-1.2.0/content/test/test-suite.xq" -o result/test-result.xml
-  - bats -t result/*.bats
-
+- curl -s "http://0.0.0.0:8080/exist/rest/db/system/repo/schematron-exist-2.0.0/test/test-suite.xq"
+  -o test/result/test-result.xml
+- bats -t test/*.bats
 after_success:
-  - docker stop exist-ci
+- docker stop exist-ci

@@ -7,7 +7,7 @@ xquery version "3.1";
  : @see LICENSE (The MIT License)
  : @see http://exist-db.org/
  : @see http://github.com/Schematron/schematron-exist
- : @version 1.1.0
+ : @version 2.0.0
  :)
 
 module namespace _ = "http://github.com/Schematron/schematron-exist";
@@ -17,6 +17,7 @@ declare namespace svrl = "http://purl.oclc.org/dsdl/svrl";
 declare namespace xsl = "http://www.w3.org/1999/XSL/Transform";
 declare namespace xmldb = "http://exist-db.org/xquery/xmldb";
 
+(: TODO: make this a computed path :)
 declare variable $_:path := '/db/system/repo/schematron-exist-2.0.0/content/iso-schematron/';
 
 declare variable $_:include := $_:path || "iso_dsdl_include.xsl";
@@ -30,6 +31,7 @@ declare variable $_:info := ('info', 'information');
 
 (:~
  : Compile a given Schematron file so that it can be used to validate documents.
+ : @return a compiled schematron file
  :)
 declare function _:compile($schematron) as node() {
   _:compile($schematron, () )
@@ -37,6 +39,7 @@ declare function _:compile($schematron) as node() {
 
 (:~
  : Compile a given Schematron file using given parameters so that it can be used to validate documents.
+ : @return a compiled schematron file
  :)
 declare function _:compile($schematron, $params) as node() {
   let $p := typeswitch ($params)
@@ -49,7 +52,8 @@ declare function _:compile($schematron, $params) as node() {
 };
 
 (:~
- : Validate a given document using a compiled Schematron. Returns SVRL validation result.
+ : Validate a given document using a compiled Schematron.
+ : @return SVRL validation result.
  :)
 declare function _:validate($document as node(), $compiledSchematron as node()) as node() {
   transform:transform($document, $compiledSchematron, ())
@@ -57,6 +61,7 @@ declare function _:validate($document as node(), $compiledSchematron as node()) 
 
 (:~
  : Check whether a SVRL validation result indicates valid in a pass/fail sense.
+ : @return true if passing, fail otherwise
  :)
 declare function _:is-valid($svrl) as xs:boolean {
   boolean($svrl[descendant::svrl:fired-rule]) and

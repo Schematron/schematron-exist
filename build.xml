@@ -17,7 +17,7 @@
   </target>
   <target name="xar" depends='clean' description="compile all source files">
     <mkdir dir="${build.dir}"/>
-    <zip basedir="." destfile="${build.dir}/${project.app}.xar" excludes="dist/** test/result/** *.xpr"/>
+    <zip basedir="." destfile="${build.dir}/${project.app}.xar" excludes="dist/** test/result/** *.xpr .travis.yml .notes.txt"/>
   </target>
   <target name="test" description="executing tests">
     <mkdir dir="test/result"/>
